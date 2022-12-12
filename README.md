@@ -1,5 +1,5 @@
 # Project2
-This is the second exam from Spring full course.Project2
+This is the second exam task from Spring full course.Project2
 
 ## In this app I used next tools :
 ___Java, Spring, Spring Data JPA, Hibernate, SQL, PostgreSQL, Maven, Apache Tomcat, HTML, Thymeleaf.___
