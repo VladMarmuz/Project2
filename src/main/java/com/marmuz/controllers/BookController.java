@@ -5,7 +5,6 @@ import com.marmuz.models.Person;
 import com.marmuz.services.BooksService;
 import com.marmuz.services.PeopleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,8 +23,16 @@ public class BookController {
     }
 
     @GetMapping("")
-    public String allBooks(Model model) {
-        model.addAttribute("books", booksService.findAll());
+    public String allBooks(Model model,
+                           @RequestParam(value = "sort_by_year", required = false) boolean sortByYear,
+                           @RequestParam(value = "page", required = false) Integer page,
+                           @RequestParam(value = "books_page", required = false) Integer bookPage) {
+
+        if (page == null || bookPage == null) {
+            model.addAttribute("books", booksService.findAll(sortByYear));
+        } else {
+            model.addAttribute("books", booksService.findWithPagination(page, bookPage, sortByYear));
+        }
         return "book/books";
     }
 
@@ -49,7 +56,7 @@ public class BookController {
     public String showBook(@PathVariable("id") int id, Model model, @ModelAttribute("person") Person person) {
         model.addAttribute("book", booksService.findBookById(id));
 
-        Person owner = booksService.findPersonByBookId(id);
+        Person owner = booksService.getBookOwner(id);
         if (owner != null)
             model.addAttribute("person", owner);
         else
@@ -90,6 +97,17 @@ public class BookController {
     public String assignBook(@PathVariable("id") int id, @ModelAttribute("person") Person person) {
         booksService.assignBook(id, person);
         return "redirect:/books/" + id;
+    }
+
+    @GetMapping("/search")
+    public String searchPage() {
+        return "book/search";
+    }
+
+    @PostMapping("/search")
+    public String makeSearch(Model model, @RequestParam("query") String query) {
+        model.addAttribute("books", booksService.searchByTitle(query));
+        return "book/search";
     }
 
 

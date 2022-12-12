@@ -26,11 +26,9 @@ public class Person {
     public Person() {
     }
 
-    public Person(int id, String fullName, int yearOfBirth, List<Book> book) {
-        this.id = id;
+    public Person(String fullName, int yearOfBirth) {
         this.fullName = fullName;
         this.yearOfBirth = yearOfBirth;
-        this.book = book;
     }
 
     public int getId() {
